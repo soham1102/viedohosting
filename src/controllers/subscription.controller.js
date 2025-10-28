@@ -50,8 +50,8 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     .skip((pageNum-1)*limitNum)
     .limit(limitNum)
 
-    if(!subscribersList.length){
-        throw new ApiError(404,"No subscriber is subscribed to channel")
+    if(subscribersList.length==0){
+        console.log("No subscriber is subscribed to channel")
     }
     const subscriberCount=await Subscription.countDocuments({channel:channelId})
     return res.status(200).
