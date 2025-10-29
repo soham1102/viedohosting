@@ -44,11 +44,15 @@ const createTweet = asyncHandler(async (req, res) => {
 
 const getUserTweets = asyncHandler(async (req, res) => {
     // TODO: get user tweets
-    const user=await User.findById(req.user?._id)
-    if(!user){
+    const {userId}=req.params;
+    //  const user=await User.findById(req.user?._id)
+    //  if(!user){
+    //     throw new ApiError(400,"this user doesnot exist")
+    //  }
+    if(!isValidObjectId(userId)){
         throw new ApiError(400,"this user doesnot exist")
     }
-    const tweet=await Tweet.find({owner:user._id})
+    const tweet=await Tweet.find({owner:userId})
     .select("content createdAt owner") // owner optinal bheja hai
     .populate("owner","username avatar")
     if(!tweet || tweet.length===0){
@@ -59,7 +63,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
     // ["My first tweet!", "Learning backend!"]
 
     return res.status(200)
-    .json(new ApiResponse(200,tweetContents,"Tweet is fectched successfully from user"))
+    .json(new ApiResponse(200,tweetContents,"Tweet is fetched successfully from user"))
 })
 
 const updateTweet = asyncHandler(async (req, res) => {
