@@ -40,7 +40,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
             }
         },
         {
-            $unwind:"owner"
+            $unwind:"$owner"
         },
         {
             $lookup:{
@@ -53,9 +53,9 @@ const getVideoComments = asyncHandler(async (req, res) => {
         },
         {
             $addFields:{
-                totalLikes:{$size:"$(likedField)"},
-                isOwner:userId ? $eq([owner._id,userId]):false,
-                isLiked:userId ? $in([userId,likedField.likedBy]):false
+                totalLikes:{$size:"$likedField"},
+                isOwner:userId ? {$eq:["$owner._id",userId]}:false,
+                isLiked:userId ? {$in:[userId,"$likedField.likedBy"]}:false
             }
         },
         {
@@ -94,11 +94,11 @@ const getVideoComments = asyncHandler(async (req, res) => {
 const addComment = asyncHandler(async (req, res) => {
     // TODO: add a comment to a video
     const {comment}=req.body
-    const {viedoId}=req.query
+    const {viedoId}=req.params
     if(!comment || comment.trim()===0){
         throw new ApiError(400,"comment field is empty or undefined")
     }
-    if(!viedoId){
+    if(!isValidObjectId(viedoId)){
         throw new ApiError(400,"that viedo doesnot exist")
     }
     // verifyJwt user come from there as i need to know which user added a comment

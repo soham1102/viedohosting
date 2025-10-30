@@ -3,9 +3,9 @@ import { addComment, deleteComment, getVideoComments, updateComment } from "../c
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router=Router()
 
-router.route("/get-comments").get(verifyJWT,getVideoComments)
-router.route("/add-comment").post(verifyJWT,addComment)
-router.route("/update-comment").patch(verifyJWT,updateComment)
-router.route("/delete-comment").delete(verifyJWT,deleteComment)
+router.route("/get-comments/:viedoId").get(verifyJWT,getVideoComments)
+router.route("/add-comment/:viedoId").post(verifyJWT,addComment)
+router.route("/update-comment/:commentId").patch(verifyJWT,updateComment)
+router.route("/delete-comment/:commentId").delete(verifyJWT,deleteComment)
 
 export default router

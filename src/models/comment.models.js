@@ -17,7 +17,7 @@ const commentSchema=new Schema(
         },
         like:{
             type:Number,
-            required:true
+            default:0
         }
     },
     {
